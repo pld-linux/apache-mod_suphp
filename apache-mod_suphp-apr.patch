@@ -1,6 +1,15 @@
 diff -urN suphp-0.5.2.org/src/apache2/mod_suphp.c suphp-0.5.2/src/apache2/mod_suphp.c
---- suphp-0.5.2.org/src/apache2/mod_suphp.c	2004-10-20 22:35:50.075483226 +0200
-+++ suphp-0.5.2/src/apache2/mod_suphp.c	2004-10-20 22:38:22.569814891 +0200
+--- suphp-0.5.2.org/src/apache2/mod_suphp.c	2004-10-23 12:58:09.156787800 +0200
++++ suphp-0.5.2/src/apache2/mod_suphp.c	2004-10-23 12:59:23.461491768 +0200
+@@ -56,7 +56,7 @@
+         return -1;
+        
+     rv = apr_bucket_read(b, &bucket_data, &bucket_data_len, APR_BLOCK_READ);
+-    if (!APR_STATUS_IS_SUCCESS(rv) || (bucket_data_len == 0))
++    if (rv != APR_SUCCESS || (bucket_data_len == 0))
+     {
+         return 0;
+     }
 @@ -524,7 +524,7 @@
              return rv;
          }
