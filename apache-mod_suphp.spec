@@ -102,4 +102,6 @@ fi
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
+%if ! %{_apache1}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*
+%endif
