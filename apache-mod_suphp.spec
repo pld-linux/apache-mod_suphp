@@ -37,7 +37,11 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
-%configure
+%configure \
+	--with-http-user=http \
+	--with-min-uid=500 \
+	--with-min-gid=1000
+
 %{__make}
 
 #%{apxs} -c mod_%{mod_name}.c -o mod_%{mod_name}.so -lz
