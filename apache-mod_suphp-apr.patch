@@ -1,0 +1,30 @@
+diff -urN suphp-0.5.2.org/src/apache2/mod_suphp.c suphp-0.5.2/src/apache2/mod_suphp.c
+--- suphp-0.5.2.org/src/apache2/mod_suphp.c	2004-10-20 22:35:50.075483226 +0200
++++ suphp-0.5.2/src/apache2/mod_suphp.c	2004-10-20 22:38:22.569814891 +0200
+@@ -524,7 +524,7 @@
+             return rv;
+         }
+         
+-        APR_BRIGADE_FOREACH(bucket, bb)
++	for(bucket = APR_BRIGADE_FIRST(bb); bucket != APR_BRIGADE_SENTINEL(bb); bucket = APR_BRIGADE_SENTINEL(bb))
+         {
+             const char *data;
+             apr_size_t len;
+@@ -595,7 +595,7 @@
+             
+             const char *buf;
+             apr_size_t blen;
+-            APR_BRIGADE_FOREACH(b, bb)
++	    for(b = APR_BRIGADE_FIRST(bb); b != APR_BRIGADE_SENTINEL(bb); b = APR_BRIGADE_SENTINEL(bb))
+             {
+                 if (APR_BUCKET_IS_EOS(b))
+                     break;
+@@ -616,7 +616,7 @@
+             /* empty brigade (script output) */
+             const char *buf;
+             apr_size_t blen;
+-            APR_BRIGADE_FOREACH(b, bb)
++	    for(b = APR_BRIGADE_FIRST(bb); b != APR_BRIGADE_SENTINEL(bb); b = APR_BRIGADE_SENTINEL(bb))
+             {
+                 if (APR_BUCKET_IS_EOS(b))
+                     break;
