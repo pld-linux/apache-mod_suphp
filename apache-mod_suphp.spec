@@ -44,8 +44,9 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_pkglibdir}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
 
+install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 install src/apache/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 
 %clean
@@ -68,4 +69,5 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
+%attr(4755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_pkglibdir}/*
