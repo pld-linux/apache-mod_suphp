@@ -1,6 +1,6 @@
 #
 # Available build options:
-%bcond_with	checkpath	# enable check if PHP execution is within
+%bcond_with	checkpath	# enable check if php execution is within
 				# DOCUMENT_ROOT of the vhost
 #
 %define		mod_name	suphp
@@ -37,7 +37,7 @@ binary (suphp) that is called by the Apache module to change the uid of
 the process executing the PHP interpreter.
 
 %description -l pl
-suPHP jest narzêdziem pozwalaj±cym na wykonywanie skryptów PHP z
+suPHP jest narzêdziem pozwalaj±cym na wykonywanie skryptów w PHP z
 uprawnieniami ich w³a¶cicieli. Sk³ada siê z modu³u (mod_suphp) oraz
 programu (suphp) z ustawionym bitem suid, który uruchamiany jest przez
 modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
