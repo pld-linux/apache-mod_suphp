@@ -64,14 +64,14 @@ chmod 755 configure
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 %if %{_apache1}
 install src/apache/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 %else
 install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod-suphp.conf
 %endif
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
@@ -102,3 +102,4 @@ fi
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*
