@@ -16,6 +16,7 @@ Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
 # Source0-md5:	337909e87027af124052baddddbd2994
 Source1:	%{name}.logrotate
 Source2:	%{name}.conf
+Patch0:		%{name}-apr.patch
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2
@@ -43,6 +44,7 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 
 %prep
 %setup -q -n %{mod_name}-%{version}
+%patch0 -p1
 
 %build
 %{__aclocal}
