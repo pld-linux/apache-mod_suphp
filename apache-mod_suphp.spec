@@ -64,6 +64,7 @@ chmod 755 configure
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 %if %{_apache1}
