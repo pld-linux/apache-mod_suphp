@@ -4,7 +4,6 @@
 #			  of the vhost; you want to set it ie. if you use symlinks to directories 
 #			  that lay outside vhost DOCUMENT_ROOT
 #
-#
 %define		mod_name	suphp
 %define 	apxs		/usr/sbin/apxs
 Summary:	Apache module: suPHP - execute PHP scripts with the permissions of their owners
@@ -20,6 +19,8 @@ Source1:	apache-mod_suphp.logrotate
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel <= 1.4
+BuildRequires:	autoconf
+BuildRequires:	automake
 Requires(post,preun):	%{apxs}
 Requires:	apache
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -46,7 +47,8 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 %{__autoconf}
 %{__autoheader}
 chmod 755 configure
-%configure --with-apache-user=http \
+%configure \
+	--with-apache-user=http \
 	--with-min-uid=500 \
 	--with-min-gid=1000 \
 	--with-apxs=%{apxs} \
@@ -61,8 +63,8 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 install src/apache/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install --mode=640 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/apache-mod_suphp
+install -d $RPM_BUILD_ROOT/etc/logrotate.d
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -81,12 +83,9 @@ if [ "$1" = "0" ]; then
 	fi
 fi
 
-%postun
-rm -f %{_sysconfdir}/logrotate.d/apache-mod_suphp
-
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
 %attr(4755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_pkglibdir}/*
-%config(noreplace) %{_sysconfdir}/logrotate.d/*
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
