@@ -1,8 +1,7 @@
 #
 # Available build options:
-#  _disable_checkpath	- set to '1' to disable check if php execution is within DOCUMENT_ROOT
-#			  of the vhost; you want to set it ie. if you use symlinks to directories 
-#			  that lay outside vhost DOCUMENT_ROOT
+#  with_checkpath	- enable check if php execution is within DOCUMENT_ROOT
+#			  of the vhost
 #
 %define		mod_name	suphp
 %define 	apxs		/usr/sbin/apxs
@@ -10,7 +9,7 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.3.1
-Release:	0.4
+Release:	0.5
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz	
@@ -48,11 +47,14 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 %{__autoheader}
 chmod 755 configure
 %configure \
+	%{?with_checkpath: --enable-checkpath} \
+	%{!?with_checkpath: --disable-checkpath} \
 	--with-apache-user=http \
 	--with-min-uid=500 \
 	--with-min-gid=1000 \
 	--with-apxs=%{apxs} \
-	%{?_disable_checkpath: --enable-checkpath=no}
+	--disable-checkuid \
+	--disable-checkgid
 
 %{__make}
 
