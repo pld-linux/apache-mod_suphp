@@ -19,11 +19,11 @@ Source2:	%{name}.conf
 Patch0:		%{name}-apr.patch
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
-BuildRequires:	apache-devel >= 2
+BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
 Requires(post,preun):	%{apxs}
-Requires:	apache >= 2
+Requires:	apache >= 2.0.52-2
 Requires:	php-cgi
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
