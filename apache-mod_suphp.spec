@@ -70,11 +70,11 @@ install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 install src/apache/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 %else
 install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
 %endif
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
