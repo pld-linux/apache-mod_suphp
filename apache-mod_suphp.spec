@@ -5,28 +5,28 @@
 #
 %define		mod_name	suphp
 %define 	apxs		/usr/sbin/apxs
-%define 	_apache1        %(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 0 || echo 1)
 Summary:	Apache module: suPHP - execute PHP scripts with the permissions of their owners
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.5.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz	
 # Source0-md5:	337909e87027af124052baddddbd2994
-Source1:	apache-mod_suphp.logrotate
-Source2:	apache-mod_suphp.conf
+Source1:	%{name}.logrotate
+Source2:	%{name}.conf
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
-BuildRequires:	apache-devel
+BuildRequires:	apache-devel >= 2
 BuildRequires:	autoconf
 BuildRequires:	automake
 Requires(post,preun):	%{apxs}
-Requires:	apache
+Requires:	apache >= 2
 Requires:	php-cgi
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR)
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 
 %description
@@ -64,15 +64,11 @@ chmod 755 configure
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
-%if %{_apache1}
-install src/apache/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-%else
 install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod-suphp.conf
-%endif
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
@@ -80,7 +76,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{_apache1}
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
@@ -94,7 +89,6 @@ if [ "$1" = "0" ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
-%endif
 
 %files
 %defattr(644,root,root,755)
@@ -102,6 +96,4 @@ fi
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
-%if ! %{_apache1}
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*
-%endif
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd.conf/*
