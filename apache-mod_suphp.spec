@@ -1,7 +1,7 @@
 #
 # Available build options:
-#  with_checkpath	- enable check if php execution is within DOCUMENT_ROOT
-#			  of the vhost
+%bcond_with	checkpath	# enable check if php execution is within
+				# DOCUMENT_ROOT of the vhost
 #
 %define		mod_name	suphp
 %define 	apxs		/usr/sbin/apxs
@@ -99,6 +99,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
-%attr(4755,root,root) %{_sbindir}/*
+%attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
