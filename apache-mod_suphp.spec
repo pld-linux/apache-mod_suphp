@@ -9,10 +9,10 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.5.2
-Release:	4
+Release:	5
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz	
+Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
 # Source0-md5:	337909e87027af124052baddddbd2994
 Source1:	%{name}.logrotate
 Source2:	%{name}.conf
@@ -31,10 +31,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 
 %description
-suPHP is a tool for executing PHP scripts with the permissions of their
-owners. It consists of an Apache module (mod_suphp) and a setuid root
-binary (suphp) that is called by the Apache module to change the uid of
-the process executing the PHP interpreter.
+suPHP is a tool for executing PHP scripts with the permissions of
+their owners. It consists of an Apache module (mod_suphp) and a setuid
+root binary (suphp) that is called by the Apache module to change the
+uid of the process executing the PHP interpreter.
 
 %description -l pl
 suPHP jest narzêdziem pozwalaj±cym na wykonywanie skryptów w PHP z
@@ -58,8 +58,9 @@ chmod 755 configure
 	--with-min-uid=500 \
 	--with-min-gid=1000 \
 	--with-apxs=%{apxs} \
+	--with-php=%{_bindir}/php.cgi \
 	--disable-checkuid \
-	--disable-checkgid 
+	--disable-checkgid
 
 %{__make}
 
@@ -97,5 +98,5 @@ fi
 %doc README AUTHORS ChangeLog doc
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd.conf/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*
