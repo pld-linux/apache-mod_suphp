@@ -1,6 +1,6 @@
 #
 # Available build options:
-%bcond_with	checkpath	# enable check if php execution is within
+%bcond_with	checkpath	# enable check if PHP execution is within
 				# DOCUMENT_ROOT of the vhost
 #
 %define		mod_name	suphp
