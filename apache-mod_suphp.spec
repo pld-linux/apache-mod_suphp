@@ -10,12 +10,13 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.5
-Release:	0.2
+Release:	0.5
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz	
 # Source0-md5:	a17b2f7bec0db326ee10d28460f34fe4
 Source1:	apache-mod_suphp.logrotate
+Source2:	apache-mod_suphp.conf
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel
@@ -23,6 +24,8 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 Requires(post,preun):	%{apxs}
 Requires:	apache
+Requires:	php-cgi
+Obsoletes:	php
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
@@ -72,6 +75,7 @@ install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
