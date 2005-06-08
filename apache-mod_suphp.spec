@@ -9,7 +9,7 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.5.2
-Release:	5
+Release:	6
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
@@ -19,6 +19,8 @@ Source2:	%{name}.conf
 Patch0:		%{name}-apr.patch
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
+# FIXME! (needs /usr/sbin/httpd.prefork)
+BuildRequires:	apache
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
