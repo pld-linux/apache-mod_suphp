@@ -1,0 +1,11 @@
+--- suphp-0.6.0-orig/src/apache2/Makefile.am	2005-02-27 19:00:43.000000000 +0100
++++ suphp-0.6.0/src/apache2/Makefile.am	2005-06-30 23:43:22.770388248 +0200
+@@ -3,7 +3,7 @@
+ endif
+ 
+ AM_CFLAGS=-I@APXS_INCLUDEDIR@ @APXS_EXTRA_CFLAGS@
+-AM_CFLAGS+=-DSUPHP_PATH_TO_SUPHP=\"${sbindir}/suphp\" $(DEFINE_USERGROUP)
++AM_CFLAGS+=-DSUPHP_PATH_TO_SUPHP=\"${sbindir}/suphp\" $(DEFINE_USERGROUP) -I${includedir}/apr/ -I${includedir}/apr-util/ -D_LARGEFILE64_SOURCE
+ 
+ noinst_LTLIBRARIES = mod_suphp.la
+ mod_suphp_la_SOURCES = mod_suphp.c
