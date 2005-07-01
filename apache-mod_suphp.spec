@@ -8,15 +8,16 @@
 Summary:	Apache module: suPHP - execute PHP scripts with the permissions of their owners
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
-Version:	0.5.2
-Release:	6
+Version:	0.6.0
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
-# Source0-md5:	337909e87027af124052baddddbd2994
+# Source0-md5:	fa89691101b9ebf18f4922b1382186c6
 Source1:	%{name}.logrotate
 Source2:	%{name}.conf
 Patch0:		%{name}-apr.patch
+Patch1:		%{name}-compiler-flags.patch
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
 # FIXME! (needs /usr/sbin/httpd.prefork)
@@ -47,6 +48,7 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 %prep
 %setup -q -n %{mod_name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__aclocal}
@@ -60,15 +62,19 @@ chmod 755 configure
 	--with-min-uid=500 \
 	--with-min-gid=1000 \
 	--with-apxs=%{apxs} \
-	--with-php=%{_bindir}/php.cgi \
 	--disable-checkuid \
 	--disable-checkgid
+
+# FIXME: I don't know anything about libtool, but libtool created by configure
+# doesn't work. My hardcoded trick is to replace libtool created by configure
+# with one provided by libtool package in /usr/bin/ path.
+cp %{_bindir}/libtool .
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir}}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir},%{_datadir}/suphp}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
@@ -77,6 +83,8 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
+
+install doc/suphp.conf-example $RPM_BUILD_ROOT%{_datadir}/suphp
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,5 +108,7 @@ fi
 %doc README AUTHORS ChangeLog doc
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(755,root,root) %{_pkglibdir}/*
+%attr(755,root,root) %{_datadir}/suphp
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/*
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*
+%{_datadir}/suphp/*
