@@ -25,6 +25,7 @@ BuildRequires:	apache
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	libstdc++-devel
 Requires(post,preun):	%{apxs}
 Requires:	apache >= 2.0.52-2
 Requires:	php-cgi
