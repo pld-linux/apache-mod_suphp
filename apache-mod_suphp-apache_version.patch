@@ -1,0 +1,19 @@
+--- suphp-0.6.0/configure.ac~	2005-12-22 02:37:52.000000000 +0200
++++ suphp-0.6.0/configure.ac	2005-12-22 02:37:54.000000000 +0200
+@@ -56,13 +56,15 @@
+ if test -n "$APXS"; then
+     AC_SUBST(APXS)
+     
++	if test -z "$APACHE_VERSION"; then
+     APACHE_VERSION=`\`$APXS -q SBINDIR\`/\`$APXS -q TARGET\` -v \
+                     | grep "Server version" \
+                     | cut -f2 -d":" \
+                     | cut -f2 -d"/" \
+                     | cut -f1 -d" "`
++	fi
+     major_version=`echo $APACHE_VERSION|cut -f1,2 -d.`
+-    if test "$major_version" = "2.0"; then
++    if test "$major_version" = "2.0" || test "$major_version" = "2.2"; then
+       APACHE_VERSION_2=true
+       APACHE_VERSION_1_3=false
+     else
