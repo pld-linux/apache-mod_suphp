@@ -1,0 +1,4 @@
+- rel 0.5 (disable DOCUMENT_ROOT check by default since it doesn't
+  work for Alias'ed directiories; disable checkuid/checkgid as apache
+  itself works in the same way with suexec and it's usefull for
+  hosting companies)
