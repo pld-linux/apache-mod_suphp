@@ -25,7 +25,6 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libstdc++-devel
 Requires:	apache(modules-api) = %apache_modules_api
-Requires:	apache >= 2.0.52-2
 Requires:	php-cgi
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -80,7 +79,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod-suphp.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
@@ -105,9 +104,9 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
+%attr(755,root,root) %{_pkglibdir}/*.so
 %attr(4755,root,root) %{_sbindir}/suphp
-%attr(755,root,root) %{_pkglibdir}/*
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/*
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*
 %dir %{_datadir}/suphp
 %{_datadir}/suphp/*
