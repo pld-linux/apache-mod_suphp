@@ -46,14 +46,14 @@ modu³ w celu zmiany uid procesu uruchamiaj±cego interpreter PHP.
 %prep
 %setup -q -n %{mod_name}-%{version}
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 %patch2 -p1
 
 %build
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
-chmod 755 configure
+%{__automake}
 export APACHE_VERSION=$(rpm -q --qf '%%{version}' apache-apxs)
 %configure \
 	%{?with_checkpath: --enable-checkpath} \
@@ -64,11 +64,6 @@ export APACHE_VERSION=$(rpm -q --qf '%%{version}' apache-apxs)
 	--with-apxs=%{apxs} \
 	--disable-checkuid \
 	--disable-checkgid
-
-# FIXME: I don't know anything about libtool, but libtool created by configure
-# doesn't work. My hardcoded trick is to replace libtool created by configure
-# with one provided by libtool package in /usr/bin/ path.
-cp %{_bindir}/libtool .
 
 %{__make}
 
