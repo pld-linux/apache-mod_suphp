@@ -8,13 +8,14 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl):	Modu³ do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich w³a¶cicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.6.1
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
 # Source0-md5:	7eb8ae29404392d9eb07c69d5242d716
 Source1:	%{name}.logrotate
 Source2:	%{name}.conf
+Source3:	%{name}-suphp.conf
 Patch0:		%{name}-apr.patch
 Patch1:		%{name}-compiler-flags.patch
 Patch2:		%{name}-apache_version.patch
@@ -63,7 +64,9 @@ export APACHE_VERSION=$(rpm -q --qf '%%{version}' apache-apxs)
 	--with-min-gid=1000 \
 	--with-apxs=%{apxs} \
 	--disable-checkuid \
-	--disable-checkgid
+	--disable-checkgid \
+	--with-setid-mode=owner \
+	--with-logfile=/var/log/httpd/suphp_log
 
 %{__make}
 
@@ -75,6 +78,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
 install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{mod_name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
@@ -100,6 +104,7 @@ fi
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{mod_name}.conf
 %attr(755,root,root) %{_pkglibdir}/*.so
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/*
