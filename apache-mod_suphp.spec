@@ -25,6 +25,7 @@ BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libstdc++-devel
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	php-cgi
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -89,15 +90,11 @@ install doc/suphp.conf-example $RPM_BUILD_ROOT%{_datadir}/suphp
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%service -q httpd restart
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %files
