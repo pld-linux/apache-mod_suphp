@@ -1,5 +1,5 @@
 /var/log/httpd/suphp_log {
-    olddir /var/log/archiv/httpd
+    olddir /var/log/archive/httpd
     postrotate
 	/bin/killall -HUP httpd
     endscript
