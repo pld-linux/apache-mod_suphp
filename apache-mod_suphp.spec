@@ -20,7 +20,7 @@ Patch0:		%{name}-apr.patch
 Patch1:		%{name}-compiler-flags.patch
 Patch2:		%{name}-apache_version.patch
 URL:		http://www.suphp.org/
-BuildRequires:	%{apxs}
+BuildRequires:	apache-apxs >= 2.0.52-2
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
