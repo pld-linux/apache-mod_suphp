@@ -1,15 +1,6 @@
-diff -urN suphp-0.5.2.org/src/apache2/mod_suphp.c suphp-0.5.2/src/apache2/mod_suphp.c
---- suphp-0.5.2.org/src/apache2/mod_suphp.c	2004-10-23 12:58:09.156787800 +0200
-+++ suphp-0.5.2/src/apache2/mod_suphp.c	2004-10-23 12:59:23.461491768 +0200
-@@ -56,7 +56,7 @@
-         return -1;
-        
-     rv = apr_bucket_read(b, &bucket_data, &bucket_data_len, APR_BLOCK_READ);
--    if (!APR_STATUS_IS_SUCCESS(rv) || (bucket_data_len == 0))
-+    if (rv != APR_SUCCESS || (bucket_data_len == 0))
-     {
-         return 0;
-     }
+diff -urN suphp-0.6.2.org/src/apache2/mod_suphp.c suphp-0.5.2/src/apache2/mod_suphp.c
+--- suphp-0.6.2.org/src/apache2/mod_suphp.c	2004-10-23 12:58:09.156787800 +0200
++++ suphp-0.6.2/src/apache2/mod_suphp.c	2004-10-23 12:59:23.461491768 +0200
 @@ -313,8 +313,8 @@
      AP_INIT_TAKE2("suPHP_UserGroup", suphp_handle_cmd_user_group, NULL, RSRC_CONF | ACCESS_CONF,
                    "User and group scripts shall be run as"),
@@ -21,36 +12,8 @@ diff -urN suphp-0.5.2.org/src/apache2/mod_suphp.c suphp-0.5.2/src/apache2/mod_su
      {NULL}
  };
  
-@@ -524,7 +524,7 @@
-             return rv;
-         }
-         
--        APR_BRIGADE_FOREACH(bucket, bb)
-+	for(bucket = APR_BRIGADE_FIRST(bb); bucket != APR_BRIGADE_SENTINEL(bb); bucket = APR_BUCKET_NEXT(bucket))
-         {
-             const char *data;
-             apr_size_t len;
-@@ -595,7 +595,7 @@
-             
-             const char *buf;
-             apr_size_t blen;
--            APR_BRIGADE_FOREACH(b, bb)
-+	    for(b = APR_BRIGADE_FIRST(bb); b != APR_BRIGADE_SENTINEL(bb); b = APR_BUCKET_NEXT(b))
-             {
-                 if (APR_BUCKET_IS_EOS(b))
-                     break;
-@@ -616,7 +616,7 @@
-             /* empty brigade (script output) */
-             const char *buf;
-             apr_size_t blen;
--            APR_BRIGADE_FOREACH(b, bb)
-+	    for(b = APR_BRIGADE_FIRST(bb); b != APR_BRIGADE_SENTINEL(bb); b = APR_BUCKET_NEXT(b))
-             {
-                 if (APR_BUCKET_IS_EOS(b))
-                     break;
-diff -ur suphp-0.6.1/acinclude.m4 suphp-0.6.1.apr/acinclude.m4
---- suphp-0.6.1/acinclude.m4	2005-11-26 20:45:49.000000000 +0100
-+++ suphp-0.6.1.apr/acinclude.m4	2006-01-27 18:53:40.000000000 +0100
+--- suphp-0.6.2/acinclude.m4.orig	2007-09-17 14:42:24.000000000 +0000
++++ suphp-0.6.2/acinclude.m4	2007-09-17 14:44:54.000000000 +0000
 @@ -40,7 +40,7 @@
  dnl value of apr_config to fetch any necessary build/link information.
  dnl
@@ -81,10 +44,10 @@ diff -ur suphp-0.6.1/acinclude.m4 suphp-0.6.1.apr/acinclude.m4
        apr_found="yes"
 -      apr_config="$withval/apr-config"
 +      apr_config="$withval/apr-1-config"
-     elif $TEST_X "$withval" && $withval --help > /dev/null 2>&1 ; then
+     elif $TEST_X "$withval/bin/apr-1-config"; then
        apr_found="yes"
-       apr_config="$withval"
-@@ -73,7 +73,7 @@
+       apr_config="$withval/bin/apr-1-config"
+@@ -79,7 +79,7 @@
      dnl if --with-apr is used, then the target prefix/directory must be valid
      if test "$apr_found" != "yes"; then
        AC_MSG_ERROR([the --with-apr parameter is incorrect. It must specify an install prefix, a
@@ -93,7 +56,7 @@ diff -ur suphp-0.6.1/acinclude.m4 suphp-0.6.1.apr/acinclude.m4
      fi
    ],[
      dnl if we have a bundled source directory, use it
-@@ -81,21 +81,21 @@
+@@ -87,21 +87,21 @@
        apr_temp_abs_srcdir="`cd $1 && pwd`"
        apr_found="reconfig"
        if test -n "$2"; then
