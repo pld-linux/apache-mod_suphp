@@ -8,7 +8,7 @@ Summary:	Apache module: suPHP - execute PHP scripts with the permissions of thei
 Summary(pl.UTF-8):	Moduł do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich właścicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.6.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
@@ -31,8 +31,8 @@ Requires:	php-cgi
 Conflicts:	logrotate < 3.7-4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
-%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)
+%define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
+%define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
 %description
 suPHP is a tool for executing PHP scripts with the permissions of
@@ -57,10 +57,9 @@ moduł w celu zmiany uid procesu uruchamiającego interpreter PHP.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-export APACHE_VERSION=$(rpm -q --qf '%%{version}' apache-apxs)
+APACHE_VERSION=$(rpm -q --qf '%{V}' apache-devel); export APACHE_VERSION
 %configure \
-	%{?with_checkpath: --enable-checkpath} \
-	%{!?with_checkpath: --disable-checkpath} \
+	--%{?with_checkpath:en}%{!?with_checkpath:dis}able-checkpath \
 	--with-apache-user=http \
 	--with-min-uid=500 \
 	--with-min-gid=1000 \
@@ -74,12 +73,12 @@ export APACHE_VERSION=$(rpm -q --qf '%%{version}' apache-apxs)
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_pkglibdir},%{_datadir}/suphp}
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{apachelibdir},%{_datadir}/suphp}
+install -d $RPM_BUILD_ROOT%{apacheconfdir}
 
 install src/suphp $RPM_BUILD_ROOT%{_sbindir}
-install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf
+install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{apachelibdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{apacheconfdir}/70_mod_%{mod_name}.conf
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{mod_name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
@@ -101,9 +100,9 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS ChangeLog doc
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{apacheconfdir}/*_mod_%{mod_name}.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{mod_name}.conf
-%attr(755,root,root) %{_pkglibdir}/*.so
+%attr(755,root,root) %{apachelibdir}/*.so
 %attr(4755,root,root) %{_sbindir}/suphp
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/*
 %dir %{_datadir}/suphp
