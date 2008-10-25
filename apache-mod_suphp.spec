@@ -10,7 +10,7 @@ Name:		apache-mod_%{mod_name}
 Version:	0.6.3
 Release:	1
 License:	GPL
-Group:		Networking/Daemons
+Group:		Networking/Daemons/HTTP
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
 # Source0-md5:	756e8893857fefed087a89959a87645a
 Source1:	%{name}.logrotate
