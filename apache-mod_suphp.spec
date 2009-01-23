@@ -7,18 +7,17 @@
 Summary:	Apache module: suPHP - execute PHP scripts with the permissions of their owners
 Summary(pl.UTF-8):	Moduł do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich właścicieli
 Name:		apache-mod_%{mod_name}
-Version:	0.6.3
+Version:	0.7.0
 Release:	1
 License:	GPL
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
-# Source0-md5:	756e8893857fefed087a89959a87645a
+# Source0-md5:	dac578fc8bda630cc37ed6e47d4ff213
 Source1:	%{name}.logrotate
 Source2:	%{name}.conf
 Source3:	%{name}-suphp.conf
-Patch0:		%{name}-apr.patch
-Patch1:		%{name}-compiler-flags.patch
-Patch2:		%{name}-apache_version.patch
+Patch0:		%{name}-compiler-flags.patch
+Patch1:		%{name}-apache_version.patch
 URL:		http://www.suphp.org/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.52-2
@@ -50,7 +49,6 @@ moduł w celu zmiany uid procesu uruchamiającego interpreter PHP.
 %setup -q -n %{mod_name}-%{version}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 %{__aclocal}
