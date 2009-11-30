@@ -1,7 +1,7 @@
 /var/log/httpd/suphp_log {
     olddir /var/log/archive/httpd
     postrotate
-	/bin/killall -HUP httpd
+	/sbin/service httpd flush-logs > /dev/null
     endscript
 }
 
