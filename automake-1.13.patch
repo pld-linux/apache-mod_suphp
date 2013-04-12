@@ -1,0 +1,12 @@
+diff -uNr suphp-0.7.1.old/configure.ac suphp-0.7.1/configure.ac
+--- suphp-0.7.1.old/configure.ac	2009-03-14 18:58:11.000000000 +0100
++++ suphp-0.7.1/configure.ac	2013-04-12 15:26:34.102119142 +0200
+@@ -10,7 +10,7 @@
+ # Check for right directory
+ AC_CONFIG_SRCDIR([src/Application.cpp])
+ # Config headers for automake
+-AM_CONFIG_HEADER([src/config.h])
++AC_CONFIG_HEADERS([src/config.h])
+ 
+ # Build time sanity check
+ AM_SANITY_CHECK
