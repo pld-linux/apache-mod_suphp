@@ -1,14 +1,14 @@
 #
 # Available build options:
 %bcond_with	checkpath	# enable check if php execution is within DOCUMENT_ROOT of the vhost
-#
+
 %define		mod_name	suphp
 %define 	apxs		/usr/sbin/apxs
 Summary:	Apache module: suPHP - execute PHP scripts with the permissions of their owners
 Summary(pl.UTF-8):	Moduł do apache: suPHP - uruchamianie skryptów PHP z uprawnieniami ich właścicieli
 Name:		apache-mod_%{mod_name}
 Version:	0.7.1
-Release:	4
+Release:	5
 License:	GPL
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.suphp.org/download/%{mod_name}-%{version}.tar.gz
@@ -28,7 +28,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	apache(modules-api) = %apache_modules_api
-Requires:	php-cgi
+Requires:	php(cgi)
 Conflicts:	logrotate < 3.7-4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -77,15 +77,14 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{apachelibdir},%{_datadir}/suphp}
 install -d $RPM_BUILD_ROOT%{apacheconfdir}
 
-install src/suphp $RPM_BUILD_ROOT%{_sbindir}
-install src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{apachelibdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{apacheconfdir}/70_mod_%{mod_name}.conf
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{mod_name}.conf
+install -p src/suphp $RPM_BUILD_ROOT%{_sbindir}
+install -p src/apache2/.libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{apachelibdir}
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{apacheconfdir}/70_mod_%{mod_name}.conf
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{mod_name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/logrotate.d
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
-
-install doc/suphp.conf-example $RPM_BUILD_ROOT%{_datadir}/suphp
+cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/logrotate.d/apache-mod_suphp
+cp -p doc/suphp.conf-example $RPM_BUILD_ROOT%{_datadir}/suphp
 
 %clean
 rm -rf $RPM_BUILD_ROOT
